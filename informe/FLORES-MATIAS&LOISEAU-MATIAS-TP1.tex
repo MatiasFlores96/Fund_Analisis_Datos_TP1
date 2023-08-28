@@ -1,0 +1,268 @@
+
+
+% This is a semi-simple sample document.
+
+\documentclass{article} % \documentclass{} is the first command in any LaTeX code.  It is used to define what kind of document you are creating such as an article or a book, and begins the document preamble
+
+%\usepackage[spanish]{babel} % Para traducir palabras claves al español como "Figure" -> "Figura"
+
+\usepackage{amsmath, amssymb} % \usepackage is a command that allows you to add functionality to your LaTeX code
+
+\usepackage{mathtools} % using cases inside equations
+
+\usepackage{graphicx} % image package
+
+\usepackage{float} % Float specifiers are written in the square brackets whenever we use a float such as a figure or a table
+
+\usepackage{subcaption} % more than one picture s in the same figure
+
+\parskip 0.1in %paragraph distance
+
+\usepackage[margin=0.984252in]{geometry} %margin
+
+\usepackage[hidelinks]{hyperref} % Magic for index linking
+
+\usepackage{chngcntr} % For figure number matching with section number
+\counterwithin{figure}{section}
+
+\usepackage{appendix} % Appendix
+
+\title{Trabajo Práctico N°1} % Sets article title
+\date{Septiembre 2023} % Sets article date
+
+\author{
+	\textbf{Fundamentos de Análisis de Datos}\\
+	Maestría en Ciencia de Datos\\
+	\\~\\
+	\textbf{Flores, Matías}\\
+	matflores@itba.edu.ar
+ 	\\~\\
+ 	\textbf{Loiseau, Matías}\\
+ 	mloiseau@itba.edu.ar
+}
+
+% The preamble ends with the command \begin{document}
+\begin{document} % All begin commands must be paired with an end command somewhere
+
+\begin{figure}
+\centering
+	\includegraphics[width=0.2\textwidth]{images/itba-logo}
+	%\caption{Mi Figure}
+	\label{fig:itba-logo}
+\end{figure}
+\maketitle % creates title using information in preamble (title, author, date)
+
+\thispagestyle{empty} % Ignore page number
+\cleardoublepage
+
+\cleardoublepage
+\tableofcontents % general index
+\cleardoublepage
+
+\section{Ejercicio N° 1}
+En el archivo \textit{Dieta.xlsx} se encuentran los datos correspondientes a 173 personas que están siguiendo una dieta. Para cada una de ellas, se registró el sexo y el consumo de grasas saturadas y de alcohol, así como del total de calorías diarias.
+
+\subsection{Primer punto}
+
+\textbf{Consigna:} Analizar si existen datos faltantes y, en caso afirmativo, eliminar tales registros.
+
+
+
+\subsection{Segundo punto}
+
+\textbf{Consigna:} Calcular las siguientes medidas estadísticas descriptivas clásicas del consumo de grasas: rango, media, mediana, desvío estándar y rango intercuartil.
+
+
+\subsection{Tercer punto}
+
+\textbf{Consigna:} Realizar gráficos boxplots de los datos sobre el consumo de calorías en función de la variable categórica. ¿Qué puede observarse?
+
+
+\subsection{Cuarto punto}
+
+\textbf{Consigna:} Dividir la cantidad de calorías consumidas en dos categorías: MODERADA (menor o igual a 1700) o ALTA (mayor a 1700). Analizar el consumo de alcohol de acuerdo a la cantidad de calorías consumidas según las categorías definidas.
+
+\section{Ejercicio N° 2}
+El archivo \textit{Sociodemograficos.xlsx} contiene datos sobre distintos indicadores socio-demográficos de varios países.
+
+\subsection{Primer punto}
+
+\textbf{Consigna:} ¿Cuáles son las variables de interés? ¿Cuántos países fueron analizados?
+
+\subsection{Segundo punto}
+
+\textbf{Consigna:} ¿Cuáles son los países con menor y mayor tasa de natalidad?
+
+
+\subsection{Tercer punto}
+
+\textbf{Consigna:} Realizar un diagrama de dispersión con las tasas de natalidad y de mortalidad infantil. ¿Qué puede observarse? Justificar lo observado a partir del gráfico con una medida cuantitativa.
+
+
+\subsection{Cuarto punto}
+
+\textbf{Consigna:} Calcular el vector de medias y medianas.
+
+\subsection{Quinto punto}
+
+\textbf{Consigna:} Calcular las matrices de covarianzas y de correlaciones. A partir de estas matrices dar un ejemplo de dos variables fuertemente correlacionadas positivamente, de dos variables fuertemente correlacionadas negativamente y de dos variables no correlacionadas.
+
+\section{Ejercicio N° 3}
+Vamos a considerar el conjunto de datos \textit{swiss} disponible en R.
+
+\subsection{Primer punto}
+
+\textbf{Consigna:} Cargar la base de datos y explorarla. ¿Cuántos registros y cuántas variables tiene? Describir las variables de estudio.
+
+\subsection{Segundo punto}
+
+\textbf{Consigna:} Se desea comparar las provincias entre sí. ¿Es adecuado utilizar la distancia Euclídea para realizar la comparación? Justificar la respuesta.
+
+
+\subsection{Tercer punto}
+
+\textbf{Consigna:} Buscar la presencia de datos atípicos mediante la distancia de Mahalanobis. Comentar los resultados obtenidos.
+
+
+\section{Ejercicio N° 4}
+El Departamento de Psicología de una universidad ubicada en una ciudad céntrica realizó un estudio sobre la asistencia a clases teóricas no obligatorias dependiendo de la localidad de residencia del estudiantado. Para tal fin, se seleccionaron 40 estudiantes en la Ciudad A, 40 estudiantes en la Ciudad B y 40 estudiantes en la Ciudad C, y se contabilizó la cantidad de clases a las que cada uno/a asistió. Los resultados obtenidos se muestran en la siguiente tabla.
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{|| c | c | c ||}
+			\hline
+			\hline
+			Ciudad A & Ciudad B & Ciudad C\\
+			\hline
+			\hline		
+			11 & 13 & 6\\
+			\hline
+			14 & 10 & 7\\
+			\hline
+			7 & 12 & 3\\
+			\hline
+			15 & 7 & 5\\
+			\hline
+			11 & 5 & 9\\
+			\hline
+			13 & 10 & 6\\
+			\hline
+			11 & 10 & 1\\
+			\hline
+			16 & 16 & 6\\
+			\hline
+			10 & 9 & 0\\
+			\hline
+			15 & 7 & 2\\
+			\hline
+			18 & 7 & 5\\
+			\hline
+			12 & 2 & 6\\
+			\hline
+			9 & 6 & 11\\
+			\hline
+			9 & 9 & 6\\
+			\hline
+			10 & 9 & 7\\
+			\hline
+			10 & 8 & 0\\
+			\hline
+			15 & 8 & 5\\
+			\hline
+			10 & 10 & 7\\
+			\hline
+			14 & 3 & 5\\
+            \hline
+            10 & 6 & 4\\
+            \hline
+            10 & 5 & 7\\
+            \hline
+            12 & 2 & 4\\
+            \hline
+            14 & 9 & 2\\
+            \hline
+            12 & 3 & 8\\
+            \hline
+            15 & 4 & 9\\
+            \hline
+            7 & 5 & 6\\
+            \hline
+            13 & 10 & 1\\
+            \hline
+            6 & 8 & 4\\
+            \hline
+            10 & 5 & 7\\
+            \hline
+            15 & 9 & 7\\
+            \hline
+            20 & 10 & 8\\
+            \hline
+            10 & 8 & 9\\
+            \hline
+            13 & 13 & 7\\
+            \hline
+            10 & 10 & 5\\
+            \hline
+            6 & 0 & 1\\
+            \hline
+            14 & 2 & 6\\
+            \hline
+            8 & 1 & 9\\
+            \hline
+            10 & 1 & 4\\
+            \hline
+            8 & 0 & 7\\
+            \hline
+            11 & 4 & 16\\
+            \hline
+			\hline
+		\end{tabular}
+		\caption{Table de asistencia a clases teóricas no obligatorias.}
+	\label{tab:table-x}
+\end{table}
+
+\subsection{Primer punto}
+
+\textbf{Consigna:} Armar un \textit{data frame} en \textit{R} con los datos de la tabla anterior, creando dos variables: una que represente la cantidad de asistencias a las clases teóricas no obligatorias y otra que represente la localidad de residencia. ¿Qué tipo de variable es cada una?
+
+\subsection{Segundo punto}
+
+\textbf{Consigna:} Analizar los datos de la muestra mediante gráficos y medidas estadísticas descriptivas. ¿Se observan diferencias en los valores promedios por localidad?
+
+\subsection{Tercer punto}
+
+\textbf{Consigna:} Realizar un test ANOVA para comparar las medias de las 3 poblaciones. Plantear las hipótesis nula y alternativa del test, informar los resultados obtenidos y la decisión tomada.
+
+
+\subsection{Cuarto punto}
+
+\textbf{Consigna:} Si se han obtenido diferencias significativas entre las localidades, determinar cuáles son esas diferencias utilizando el test de Tukey.
+
+
+
+
+
+\cleardoublepage
+
+\begin{thebibliography}{9}
+\addcontentsline{toc}{section}{Bibliography} % This is for the bibliography appears in the index
+
+\bibitem{iot}
+Iván Federico Kwist, Matías Loiseau, David Exequiel Contreras, Federico Gabriel D’Angiolo,  Roberto Osvaldo Mayer. (2019). \textit{Monitorización de un Datacenter mediante Protocolos de IoT}. Congreso Nacional de Ingeniería Informática – Sistemas de Información.
+
+\bibitem{regresion-lineal}
+Federico Gabriel D’Angiolo, Iván Federico Kwist, Matías Loiseau, David Exequiel Contreras, Fernando Asteasuain. (2019). \textit{Algoritmos de Regresión Lineal aplicados al mantenimiento de un Datacenter}. Congreso Argentino de Ciencias de la Computación.
+
+\bibitem{knn}
+Federico Gabriel D’Angiolo, Iván Federico Kwist, Matías Loiseau , David Exequiel Contreras, Gregorio Oscar Glas. (2019). \textit{Algoritmo de KNN aplicado al mantenimiento de un Datacenter}. Congreso Nacional de Ingeniería Informática – Sistemas de Información.
+
+\bibitem{deep-learning-nature}
+LeCun, Y., Bengio, Y., \& Hinton, G. (2015). \textit{Deep learning}. nature, 521(7553), 436-444.
+
+\bibitem{object-detection-review}
+Zhao, Z. Q., Zheng, P., Xu, S. T., \& Wu, X. (2019). \textit{Object detection with deep learning: A review}. IEEE transactions on neural networks and learning systems, 30(11), 3212-3232.
+
+\end{thebibliography}
+
+
+\end{document} % This is the end of the document
