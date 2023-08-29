@@ -1,5 +1,5 @@
 ---
-title: "TP1"
+title: "Trabajo Practico N°1"
 author: "Ing. Flores, Matias & Ing. Loiseau, Matias"
 format: pdf
 editor: visual
@@ -9,11 +9,21 @@ editor: visual
 library(rstudioapi)
 library(readxl)
 library(ggplot2)
-
+library(tidyverse)
+library(GGally)
+library(ggthemes)
+library(effectsize)
 ```
 
+# Ejercicio N°1
+
+## Punto 1
+
+### Carga del Data Set
+
+Para el primer ejercicio, cargamos el data set Dieta y lo analizamos.
+
 ```{r}
-# Fijamos ruta de trabajo
 setwd(dirname(getActiveDocumentContext()$path))
 ```
 
@@ -26,9 +36,11 @@ attach(Dieta)
 Dieta
 ```
 
-```{r, message=FALSE, warning=FALSE}
-library(tidyverse)
-```
+Podemos ver que el data set tiene 4 variables, Grasas, Alcohol, Calorías y Sexo.
+
+### Análisis de Nulos
+
+El primer punto nos pide analizar si existen datos faltantes. Utilizando la función is.na(), nos muestra el data set con True para valores faltantes y False para valores existentes, por lo que si utilizamos la función which() sobre esta, nos devuelve las posiciones donde se encuentran estos valores.
 
 ```{r}
 which(is.na(Dieta))
@@ -39,49 +51,67 @@ which(is.na(Dieta))
 which(is.na(Dieta))
 
 ```
+
+### Eliminación de Nulos
 
 ```{r, message=FALSE, warning=FALSE}
 Dieta <- drop_na(Dieta)
 attach(Dieta)
 ```
 
-## Medidas estadísticas descriptivas
+## Punto 2
 
-Media
+### Media
 
 ```{r}
 mean(Grasas) 
+mean(Alcohol)
+mean(Calorías)
 ```
 
-Mediana
+### Mediana
 
 ```{r}
-median(Grasas)
+median(Grasas) 
+median(Alcohol)
+median(Calorías)
 ```
 
-Rango
+### Rango
 
 ```{r}
 range(Grasas)
+range(Alcohol)
+range(Calorías)
 ```
 
-Desvío estándar
+### Desvío Estándar
 
 ```{r}
 sd(Grasas)
+sd(Alcohol)
+sd(Calorías)
 ```
 
-Cuartiles
+### Rango Intercuartil
 
 ```{r}
-Q1 <- quantile(Grasas, probs = 0.25, type = 2) # primer cuartil de la longitud del pétalo
-Q3 <- quantile(Grasas, probs = 0.75, type = 2) # tercer cuartil de la longitud del pétalo
-IQR <- as.vector(Q3 - Q1) # rango intercuartil
+Q1G <- quantile(Grasas, probs = 0.25, type = 2) 
+Q3G <- quantile(Grasas, probs = 0.75, type = 2) 
+IQRG <- as.vector(Q3G - Q1G)
+Q1A <- quantile(Alcohol, probs = 0.25, type = 2) 
+Q3A <- quantile(Alcohol, probs = 0.75, type = 2) 
+IQRA <- as.vector(Q3A - Q1A)
+Q1C <- quantile(Calorías, probs = 0.25, type = 2) 
+Q3C <- quantile(Calorías, probs = 0.75, type = 2) 
+IQRC <- as.vector(Q3C - Q1C)
 
-Q1
-Q3
-IQR
+IQRG
+IQRA
+IQRC
 ```
+
+## Punto 3
 
 ```{r}
 ggplot(Dieta, aes(x = Sexo, y = Calorías, fill = Sexo)) +
@@ -90,8 +120,11 @@ ggplot(Dieta, aes(x = Sexo, y = Calorías, fill = Sexo)) +
   theme(legend.position = "none") 
 ```
 
+## Punto 4
+
+Dividimos en dos data frames
+
 ```{r}
-# Armamos los grupos
 
 Moderada <- Dieta %>%
   filter(Calorías <= 1700)
@@ -99,38 +132,39 @@ Moderada <- Dieta %>%
 Alta <- Dieta %>%
   filter(Calorías > 1700)
 ```
-```{r}
-# Armamos los grupos
 
+```{r}
 Moderada 
 Alta
 ```
 
+### Histograma de Cada Categoría
+
 ```{r}
-nSturges <- nclass.Sturges(Moderada$Alcohol) # método de Sturges
+nSturges <- nclass.Sturges(Moderada$Alcohol)
 nSturges
 
-nScott <- nclass.scott(Moderada$Alcohol) # método de Scott
+nScott <- nclass.scott(Moderada$Alcohol)
 nScott
 
-nFD <- nclass.FD(Moderada$Alcohol) # método de Freedman-Diaconis
+nFD <- nclass.FD(Moderada$Alcohol)
 nFD
 ```
 
-
 ```{r}
 ggplot(Moderada, aes(Alcohol)) +
-  geom_histogram(bins=nSturges, color = "black", fill = "purple") +
+  geom_histogram(bins=nSturges, color = "black", fill = "dodgerblue2") +
   ylab("Frecuencia")
 
 ggplot(Moderada, aes(Alcohol)) +
-  geom_histogram(bins=nScott, color = "black", fill = "violet") +
+  geom_histogram(bins=nScott, color = "black", fill = "dodgerblue2") +
   ylab("Frecuencia")
 
 ggplot(Moderada, aes(Alcohol)) +
-  geom_histogram(bins=nFD, color = "black", fill = "pink") +
+  geom_histogram(bins=nFD, color = "black", fill = "dodgerblue2") +
   ylab("Frecuencia")
 ```
+
 ```{r}
 nSturgesAlta <- nclass.Sturges(Alta$Alcohol) # método de Sturges
 nSturgesAlta
@@ -141,59 +175,88 @@ nScottAlta
 nFDAlta <- nclass.FD(Alta$Alcohol) # método de Freedman-Diaconis
 nFDAlta
 ```
+
 ```{r}
 
 ggplot(Alta, aes(Alcohol)) +
-  geom_histogram(bins = nSturgesAlta, color = "black", fill = "purple") +
+  geom_histogram(bins = nSturgesAlta, color = "black", fill = "dodgerblue2") +
   ylab("Frecuencia")
 
 ggplot(Alta, aes(Alcohol)) +
-  geom_histogram(bins = nScottAlta, color = "black", fill = "violet") +
+  geom_histogram(bins = nScottAlta, color = "black", fill = "dodgerblue2") +
   ylab("Frecuencia")
 
 ggplot(Alta, aes(Alcohol)) +
-  geom_histogram(bins = nFDAlta, color = "black", fill = "pink") +
+  geom_histogram(bins = nFDAlta, color = "black", fill = "dodgerblue2") +
   ylab("Frecuencia")
 ```
+
 ```{r}
-Dieta2 <- Dieta
+DietaNueva <- Dieta
 ```
+
 ```{r}
-Dieta2 <- Dieta2 %>%
+Dieta <- Dieta %>%
   mutate(Categoría = ifelse(Calorías <= 1700 , "Moderada", "Alta")) 
 ```
+
 ```{r}
-Dieta2
+Dieta
 ```
+
+### Boxplot de Consumo de Alcohol
+
 ```{r}
-ggplot(Dieta2, aes(x = Categoría, y = Alcohol, fill = Categoría)) +
+ggplot(Dieta, aes(x = Categoría, y = Alcohol, fill = Categoría)) +
   geom_boxplot() +
   xlab("Categoría") +
   theme(legend.position = "none") 
 ```
+
 ```{r}
-table(Dieta2$Categoría)
+table(Dieta$Categoría)
 ```
+
+# Ejercicio N°2
+
+## Punto 1
+
+### Carga del Data Set
 
 ```{r, message=FALSE, warning=FALSE}
 Sociodemograficos <- read_excel("Sociodemograficos.xlsx")
 attach(Sociodemograficos)
 ```
+
 ```{r}
 Sociodemograficos
 ```
-#Cantidad de paises
+
+### Cantidad de Países
+
 ```{r}
 NROW(Sociodemograficos$País)
 ```
+
+## Punto 2
+
+### País con Menor Tasa de Natalidad
+
 ```{r}
 Sociodemograficos$País[which.min(Sociodemograficos$`Tasa de natalidad`)]
 ```
+
+### País con Mayor Tasa de Natalidad
+
 ```{r}
 Sociodemograficos$País[which.max(Sociodemograficos$`Tasa de natalidad`)]
 ```
+
+## Punto 3
+
+### Diagrama de Dispersión de los Países
+
 ```{r}
-# Scatterplot de las variables viento y temperatura
 ggplot(Sociodemograficos, aes(x = `Tasa de natalidad`, y = `Tasa de mortalidad`)) +
   geom_point(col = "darkslategray3") +
   geom_text(aes(label=País), 
@@ -203,53 +266,61 @@ ggplot(Sociodemograficos, aes(x = `Tasa de natalidad`, y = `Tasa de mortalidad`)
   ylab("mort")
 
 ```
+
 ```{r}
-# Scatterplot de las variables viento y temperatura
 ggplot(Sociodemograficos, aes(x = `Tasa de natalidad`, y = `Tasa de mortalidad`)) +
   geom_point(aes(colour = factor(País))) +
   xlab("nat") +
   ylab("mort")
 ```
+
 PREGUNTAR EL MARTES
+
+## Punto 4
+
+### Vector de Medias y Medianas
 
 ```{r}
 summary(Sociodemograficos)
 ```
 
+## Punto 5
+
+### Matrices de Covarianzas y Correlaciones
+
 ```{r}
-# Debemos aplicarlo para variables numéricas
 ggpairs(data = Sociodemograficos, columns = 2:9,
-        diag = list(continuous = wrap("densityDiag", fill = "pink", color="violet")))
+        diag = list(continuous = wrap("densityDiag", fill = "dodgerblue2", color="violet")))
 ```
+
+# Ejercicio N°3
+
+## Punto 1
+
+### Analisis del Data Set
 
 ```{r}
 data("swiss")
 ```
+
 ```{r}
 help(swiss)
 ```
 
+## Punto 2 (?)
+
+## Punto 3
+
+### Distancia de Mahalanobis
 
 ```{r}
-
-```
-
-
-## Distancia de Mahalanobis
-
-```{r}
-options(width = 80) # (mejora visual de la salida)
-
-# Calculamos las distancias de Mahalanobis
+options(width = 80)
 
 DM <- mahalanobis(x = swiss , center = colMeans(swiss) , cov = cov(swiss))
 DM
 ```
 
-## Detección de outliers
-
 ```{r}
-# Establecemos los puntos de corte usando la distribución chi cuadrado con 2 grados de libertad (cantidad de variables), para los distintos niveles de significación 
 
 cutoff99 <- qchisq(p = 0.99 , df = 6)
 cutoff95 <- qchisq(p = 0.95 , df = 6)
@@ -261,12 +332,18 @@ cutoff90
 ```
 
 ```{r}
-# Vemos los outliers detectados para el caso viento vs. temperatura
 
 swiss[DM > cutoff99,]
 swiss[DM > cutoff95,]
 swiss[DM > cutoff90,]
 ```
+
+# Ejercicio N°4
+
+## Punto 1
+
+### Creación del Data Frame
+
 ```{r}
 Localidad <- c("A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C" )
 Asistencia <- c(11, 14, 7, 15, 11, 13, 11, 16, 10, 15, 18, 12, 9, 9, 10, 10, 15, 10, 14, 10, 10, 12, 14, 12, 15, 7, 13, 6, 10, 15, 20, 10, 13, 10, 6, 14, 8, 10, 8, 11, 13, 10, 12, 7, 5, 10, 10, 16, 9, 7, 7, 2, 6, 9, 9, 8, 8, 10, 3, 6, 5, 2, 9, 3, 4, 5, 10, 8, 5, 9, 10, 8, 13, 10, 0, 2, 1, 1, 0, 4, 6, 7, 3, 5, 9, 6, 1, 6, 0, 2, 5, 6, 11, 6, 7, 0, 5, 7, 5, 4, 7, 4, 2, 8, 9, 6, 1, 4, 7, 7, 8, 9, 7, 5, 1, 6, 9, 4, 7, 16)
@@ -274,12 +351,19 @@ Asistencia <- c(11, 14, 7, 15, 11, 13, 11, 16, 10, 15, 18, 12, 9, 9, 10, 10, 15,
 Clases <- data.frame(Localidad, Asistencia)
 Clases
 ```
+
+## Punto 2
+
+### Analisis del Data Frame
+
 ```{r}
 summary(Clases)
 ```
+
 ```{r}
 attach(Clases)
 ```
+
 ```{r}
 # Armamos los grupos
 
@@ -292,6 +376,7 @@ CiudadB <- Clases %>%
 CiudadC <- Clases %>%
   filter(Localidad == "C")
 ```
+
 ```{r}
 # Armamos los grupos
 
@@ -299,17 +384,21 @@ CiudadA
 CiudadB
 CiudadC
 ```
+
 ```{r}
 summary(CiudadA)
 ```
+
 ```{r}
 summary(CiudadB)
 
 ```
+
 ```{r}
 summary(CiudadC)
 
 ```
+
 ```{r}
 ggplot(Clases, aes(x = Localidad, y = Asistencia, fill = Localidad)) +
   geom_boxplot() +
@@ -317,3 +406,52 @@ ggplot(Clases, aes(x = Localidad, y = Asistencia, fill = Localidad)) +
   theme(legend.position = "none") 
 ```
 
+## Punto 3
+
+### Analisis de Normalidad
+
+```{r}
+qqPlot(x = Asistencia, col = "pink", col.lines = "purple", pch = 16, 
+       id = FALSE,
+       xlab = "Cuantiles de la distribución Normal estándar",
+       ylab = "Cuantiles del tiempo de supervivencia")
+
+shapiro.test(Asistencia)
+lillie.test(Asistencia)
+```
+
+Preguntar sobre la normalidad
+
+### Analisis de Homoelasticidad
+
+```{r}
+leveneTest(data = Clases,
+           y = Asistencia,
+           group = Localidad)
+
+```
+
+### Test de ANOVA
+
+```{r}
+# ANOVA según veneno
+aov_clase <- aov(formula = Asistencia ~ Localidad,
+    data = Clases)
+
+# Resultado del ANOVA
+summary(aov_clase)
+```
+
+### Test de Chi
+
+```{r}
+eta_squared(aov_clase)$Eta2
+```
+
+## Punto 4
+
+### Test de Tukey
+
+```{r}
+TukeyHSD(aov_clase)
+```
