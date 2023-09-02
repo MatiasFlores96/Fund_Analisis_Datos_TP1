@@ -1,5 +1,3 @@
-
-
 % This is a semi-simple sample document.
 
 \documentclass{article} % \documentclass{} is the first command in any LaTeX code.  It is used to define what kind of document you are creating such as an article or a book, and begins the document preamble
@@ -26,6 +24,8 @@
 \counterwithin{figure}{section}
 
 \usepackage{appendix} % Appendix
+
+\usepackage{listings} % Para display codigo
 
 \title{Trabajo Práctico N°1} % Sets article title
 \date{Septiembre 2023} % Sets article date
@@ -59,28 +59,91 @@
 \tableofcontents % general index
 \cleardoublepage
 
+
 \section{Ejercicio N° 1}
+
 En el archivo \textit{Dieta.xlsx} se encuentran los datos correspondientes a 173 personas que están siguiendo una dieta. Para cada una de ellas, se registró el sexo y el consumo de grasas saturadas y de alcohol, así como del total de calorías diarias.
 
 \subsection{Primer punto}
 
 \textbf{Consigna:} Analizar si existen datos faltantes y, en caso afirmativo, eliminar tales registros.
 
+Antes de arrancar con la consigna cabe aclarar que previo al análisis cargamos las bibliotecas necesarias y el dataset en un data frame llamado \textit{Dieta}.
 
+Para analizar si hay datos nulos utilizamos dos funciones en específico para buscar las posiciones en donde se encuentran dichos datos. Para verificar si los datos fueron borrados correctamente, contamos la cantidad de filas antes y después de ejecutar la función de borrado. 
+
+La cantidad de filas del data frame era de 173 y la función devolvió que las posiciones donde los datos eran nulos fueron: 172, 195, 198 y 336 (donde el máximo valor era $173 x 4$). Luego de aplicar la función de borrado quedaron 169 filas, quedando así un data frame limpio para ser analizado.
 
 \subsection{Segundo punto}
 
 \textbf{Consigna:} Calcular las siguientes medidas estadísticas descriptivas clásicas del consumo de grasas: rango, media, mediana, desvío estándar y rango intercuartil.
 
+En el siguiente gráfico se puede apreciar las medidas estadísticas descriptivas de todas las variables cuantitativas del dataset Dieta. Creemos pertinente agregar las variables Alcohol y Calorías a la consigna ya que aporta una visión más general del dataset.
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{||l || c | c | c | c | c ||}
+			\hline
+			\hline
+			Variable & Rango & Media & Mediana & Desvío Estándar & Rango Intercuartil\\
+			\hline			
+			\hline
+			Grasas & 11.82 - 46.36 & 24.59 & 24.09 & 6.40 & 7.95\\
+			\hline
+			Alcohol & 0.00 - 40.11 & 8.66 & 5.84 & 8.94 & 11.19\\
+			\hline
+			Calorías & 900 - 2376 & 1585.44 & 1585 & 291.43 & 355\\
+			\hline
+			\hline
+		\end{tabular}
+		\caption{Medidas descriptivas de las variables del dataset Dieta.}
+	\label{tab:table-punto-1-2}
+\end{table}
 
 \subsection{Tercer punto}
 
 \textbf{Consigna:} Realizar gráficos boxplots de los datos sobre el consumo de calorías en función de la variable categórica. ¿Qué puede observarse?
 
+En la figura XX observamos que ambas cajas son prácticamente parecidas pero el consumo de calorías de los hombres es levemente más dispersa que el de las mujeres. La segunda diferencia notoria es que la mediana en los hombres está centrada a la misma distancia entre los cuartiles Q1 y Q3, mientras que en el caso de las mujeres la mediana se encuentra más cerca al tercer cuartil. Por último se observa que ambos set de datos contienen dos valores atípicos. 
+
+\textbf{AGREGAR BOXPLOT}
 
 \subsection{Cuarto punto}
 
 \textbf{Consigna:} Dividir la cantidad de calorías consumidas en dos categorías: MODERADA (menor o igual a 1700) o ALTA (mayor a 1700). Analizar el consumo de alcohol de acuerdo a la cantidad de calorías consumidas según las categorías definidas.
+
+Creamos dos data frames según la cantidad de calorías consumidas para poder realizar un mejor análisis de cada una por separado. Lo primero que podemos observar que para la categoría moderada quedaron 117 registros mientras que para la categoría alta fueron 52, siendo así casi la mitad de la otra.
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{||l | c ||}
+			\hline
+			\hline
+			Categoría & 	Filas\\
+			\hline			
+			\hline
+			Alta & 52\\
+			\hline
+			Moderada & 117\\
+			\hline
+			\hline
+		\end{tabular}
+		\caption{Cantidad de filas para ambas categorías.}
+	\label{tab:table-punto-1-4}
+\end{table}
+
+Los primeros gráficos realizados fueron histogramas para cada una de las categorías. Para visualizar correctamente la distribución de la variable realizamos el cálculo de 3 bins. Los métodos elegidos fueron Sturges, Scott y Freedman-Diaconis. Para ambos casos escogimos el método de Sturges.
+
+\textbf{GRAFICO 1 Y GRAFICO 2 HISTOGRAMAS}
+
+Para ambos casos, a simple vista no se puede observar un supuesto de normalidad conciso. Además se ve que en la categoría moderada el consumo de alcohol no llega a 12, por otro lado para el caso de alta llega a valores cercanos a 40.
+
+Para el caso de moderada, se puede apreciar que hay una mayor distribución entre el 0 y el 12 estando más concentrado en valores cercanos a 0, en cambio en la otra categoría la mayor concentración de datos está a partir del valor 10.
+
+\textbf{GRAFICO BOXPLOT}
+
+En la figura anterior se aprecia que el consumo de alcohol para la categoría alta tiene una mayor cantidad de dispersión que la moderada, además podemos confirmar que las personas con mayor consumo de calorías son también aquellas que consumen más alcohol. 
+
 
 \section{Ejercicio N° 2}
 El archivo \textit{Sociodemograficos.xlsx} contiene datos sobre distintos indicadores socio-demográficos de varios países.
@@ -89,23 +152,65 @@ El archivo \textit{Sociodemograficos.xlsx} contiene datos sobre distintos indica
 
 \textbf{Consigna:} ¿Cuáles son las variables de interés? ¿Cuántos países fueron analizados?
 
+Las variables de interés son: Tasa de natalidad, Tasa de mortalidad, Tasa de mortalidad infantil, Tasa de personas mayores de 65 años, Expectativa de vida al nacer, Expectativa de vida al nacer en varones, Expectativa de vida al nacer en mujeres y Población urbana. Fueron analizados 26 países.
+
 \subsection{Segundo punto}
 
 \textbf{Consigna:} ¿Cuáles son los países con menor y mayor tasa de natalidad?
 
+El país con menor tasa de natalidad es Austria con 9. En cambio, el país con mayor tasa de natalidad es Afganistán con 47. 
 
 \subsection{Tercer punto}
 
 \textbf{Consigna:} Realizar un diagrama de dispersión con las tasas de natalidad y de mortalidad infantil. ¿Qué puede observarse? Justificar lo observado a partir del gráfico con una medida cuantitativa.
 
+GRAFICO XX
+
+En el diagrama de dispersión podemos observar que la mayor concentración de países está en la parte inferior izquierda de la figura. Además, se visualiza un patrón lineal que se puede analizar con la correlación de Pearson. En este caso nos dio un valor de $0.9198$, esto quiere decir que existe una correlación positiva fuerte entre la tasa de natalidad y la tasa de mortalidad infantil.
 
 \subsection{Cuarto punto}
 
 \textbf{Consigna:} Calcular el vector de medias y medianas.
 
+En la siguiente tabla se muestra las medias y medianas de todas las variables.
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{||l || c | c ||}
+			\hline
+			\hline
+			Variable & Media & Mediana\\
+			\hline			
+			\hline
+			Tasa de Natalidad & 18.73 & 14.50\\
+			\hline
+			Tasa de Mortalidad & 8.84 & 8.00\\
+			\hline
+			Tasa de Mortalidad infantil & 26.42 & 16.50\\
+			\hline
+			Tasa de personas mayores de 65 años & 8.84 & 8.00\\
+			\hline
+			Expectativa de vida al nacer & 70.81 & 73.00\\
+			\hline
+			Expectativa de vida al nacer en varones & 68.31 & 71.00\\
+			\hline
+			Expectativa de vida al nacer en mujeres & 73.35 & 76.00\\
+			\hline
+			Población urbana & 45333423 & 8673000\\
+			\hline
+			\hline
+		\end{tabular}
+		\caption{Media y Mediana de cada una de las variables del set de datos.}
+	\label{tab:table-punto-2-4}
+\end{table}
+
 \subsection{Quinto punto}
 
 \textbf{Consigna:} Calcular las matrices de covarianzas y de correlaciones. A partir de estas matrices dar un ejemplo de dos variables fuertemente correlacionadas positivamente, de dos variables fuertemente correlacionadas negativamente y de dos variables no correlacionadas.
+
+\textbf{FIGURA}
+
+A partir de la figura XX se observa que la expectativa de vida al nacer y la expectativa de vida al nacer en mujeres tiene una fuerte correlación positiva. En cambio, la expectativa de vida al nacer en mujeres y tasa de mortalidad infantil tiene una fuerte correlación negativa. Por último podemos ver que no existe una correlación alguna entre la tasa de personas mayores a 65 años y tasa de mortalidad.
 
 \section{Ejercicio N° 3}
 Vamos a considerar el conjunto de datos \textit{swiss} disponible en R.
@@ -114,15 +219,43 @@ Vamos a considerar el conjunto de datos \textit{swiss} disponible en R.
 
 \textbf{Consigna:} Cargar la base de datos y explorarla. ¿Cuántos registros y cuántas variables tiene? Describir las variables de estudio.
 
+A partir del análisis del dataste podemos determinar que tiene 47 registros correspondientes a las provincias de suiza y 6 variables de estudio. Las mismas son: fertilidad, agricultura, examinación, educación, catolicismo y mortalidad infantil. Todas las variables se encuentran en porcentajes.
+
 \subsection{Segundo punto}
 
 \textbf{Consigna:} Se desea comparar las provincias entre sí. ¿Es adecuado utilizar la distancia Euclídea para realizar la comparación? Justificar la respuesta.
 
+Para poder determinar si utilizar la distancia euclidiana para hacer la comparación, realizamos una matriz de correlación entre las variables del conjunto de datos.
+
+\textbf{GRAFICO MATRIZ DE CORRELACION}
+
+En la figura anterior podemos observar que las variables tienen algún tipo de correlación lineal entre ellas. Si bien esta relación no es muy fuerte, consideramos que dichos valores no son despreciables. En resumen, determinamos que la distancia Euclídea no es la mejor manera de comparar las provincias entre sí.
 
 \subsection{Tercer punto}
 
 \textbf{Consigna:} Buscar la presencia de datos atípicos mediante la distancia de Mahalanobis. Comentar los resultados obtenidos.
 
+Para buscar la presencia de datos atípicos lo primero que hicimos fue calcular la distancia de Mahalanobis. Luego establecemos los puntos de corte usando la distribución de chi cuadrado con 6 grados de libertad para distintos niveles de significación ($0.90$, $0.95$ y $0.99$). 
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{||l | c ||}
+			\hline
+			\hline
+			Nivel de significación & Valor atípico\\
+			\hline			
+			\hline
+			0.90 & Geneve, La Vallee, Porrentruy, Sierre, Neuchatel, Rive Droite\\
+			\hline
+			0.95 & Geneve, La Vallee, Porrentruy\\
+			\hline
+			0.99 & Geneve\\
+			\hline
+			\hline
+		\end{tabular}
+		\caption{Valores atípicos según la distancia de Mahalanobis con varios niveles de significancia.}
+	\label{tab:table-punto-3-3}
+\end{table}
 
 \section{Ejercicio N° 4}
 El Departamento de Psicología de una universidad ubicada en una ciudad céntrica realizó un estudio sobre la asistencia a clases teóricas no obligatorias dependiendo de la localidad de residencia del estudiantado. Para tal fin, se seleccionaron 40 estudiantes en la Ciudad A, 40 estudiantes en la Ciudad B y 40 estudiantes en la Ciudad C, y se contabilizó la cantidad de clases a las que cada uno/a asistió. Los resultados obtenidos se muestran en la siguiente tabla.
@@ -217,52 +350,138 @@ El Departamento de Psicología de una universidad ubicada en una ciudad céntric
             \hline
 			\hline
 		\end{tabular}
-		\caption{Table de asistencia a clases teóricas no obligatorias.}
-	\label{tab:table-x}
+		\caption{Tabla de asistencia a clases teóricas no obligatorias.}
+	\label{tab:tabla-punto-4}
 \end{table}
 
 \subsection{Primer punto}
 
 \textbf{Consigna:} Armar un \textit{data frame} en \textit{R} con los datos de la tabla anterior, creando dos variables: una que represente la cantidad de asistencias a las clases teóricas no obligatorias y otra que represente la localidad de residencia. ¿Qué tipo de variable es cada una?
 
+Parte del data frame creado se puede visualizar en la siguiente tabla
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{|| c | c ||}
+			\hline
+			\hline
+			Ciudad & Asistencia\\
+			\hline
+			\hline		
+			A & 11\\
+			\hline
+			A & 14\\
+			\hline
+			B & 7\\
+            \hline
+            C & 5\\
+            \hline
+            .. & ..\\
+            \hline
+			\hline
+		\end{tabular}
+		\caption{Variables sobre la asistencia a clases teóricas no obligatorias según la localidad.}
+	\label{tab:tabla-punto-4-1}
+\end{table}
+
+La variable ciudad es de tipo categórica y la variable asistencia es de tipo numérica.
+
 \subsection{Segundo punto}
 
 \textbf{Consigna:} Analizar los datos de la muestra mediante gráficos y medidas estadísticas descriptivas. ¿Se observan diferencias en los valores promedios por localidad?
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{||l || c | c | c | c ||}
+			\hline
+			\hline
+			Ciudad & Media & Mediana & Rango & Desvío Estándar\\
+			\hline			
+			\hline
+			A-B-C & 8.0 & 8.0 & $0-20$ & 4.22\\
+			\hline
+			A & 11.6 & 11.0 & $6-20$ & 3.16\\
+			\hline
+			B & 6.9 & 7.5 & $0-16$ & 3.84\\
+			\hline
+			C & 5.7 & 6.0 & $0-16$ & 3.13\\
+			\hline
+			\hline
+		\end{tabular}
+		\caption{Medidas estadísticas descriptivas.}
+	\label{tab:table-punto-4-2}
+\end{table}
+
+\textbf{GRAFICO BOXPLOT}
+
+Observando la tabla \ref{tab:table-punto-4-2} y la figura XX, podemos determinar que la ciudad A tiene un mayor promedio de asistencia a clases teóricas no obligatorias. Además, las ciudades B y C son relativamente parecidas pero la B tiene un mayor desvío estándar.
 
 \subsection{Tercer punto}
 
 \textbf{Consigna:} Realizar un test ANOVA para comparar las medias de las 3 poblaciones. Plantear las hipótesis nula y alternativa del test, informar los resultados obtenidos y la decisión tomada.
 
+Para realizar el test de ANOVA primero vamos a realizar los test de normalidad y el de homocedasticidad. La hipótesis nula para el test de ANOVA es: $h_0=\mu_A=\mu_B=\mu_C$ mientras que la alternativa es que existe al menos un par $i\neq j$ tal que $\mu_i \neq \mu _j$ significativamente.
+
+Primero analizamos la normalidad de los datos de asistencia a partir de un gráfico de qqplot, ademas realizamos un test de Lilliefors para confirmar si los datos corresponden a una distribución normal. Utilizamos este test y no el de Shapíro-Willk porque estamos trabajando con más de 50 datos.
+
+El qqplot nos dio bastante normal siendo que los puntos se encuentran en el rango con algunos fuera de este en el margen superior derecho. Pero realizando el test de Lilliefors nos dio un p-value menor al nivel de significancia por lo cual determinamos que el conjunto no sigue una distribución normal. A pesar de esto, decidimos continuar con el análisis ya que suponemos que los resultados obtenidos no se encuentran tan significativamente fuera del rango de normalidad. 
+
+Continuamos con el análisis de homocedasticidad de los datos, para esto utilizamos el test de Levene. En nuestro caso nos dio $0.15$ por ende no rechazamos la hipótesis nula que supone la igualdad de las varianzas en los grupos.
+
+Procedemos a realizar el test de ANOVA sobre la asistencia según la ciudad. Luego de obtener los resultados calculamos el tamaño del efecto para compararlos con los niveles de clasificación más comunes. 
+
+En la siguiente tabla podemor ver los indicadores del test de ANOVA.
+
+\begin{table}[H]
+	\centering
+		\begin{tabular}{||l | c||}
+			\hline
+			\hline
+			Indicadores & Resultado\\
+			\hline			
+			\hline
+			Grado de Libertad & $2$\\
+			\hline
+			Estadístico F & $33.72$\\
+			\hline
+			P-Value & $2.74e^{-12}$\\
+			\hline
+			Tamaño del Efecto & $0.36$\\
+			\hline
+			\hline
+		\end{tabular}
+		\caption{Resultados de ANOVA.}
+	\label{tab:table-punto-4-3}
+\end{table}
+
+El P-Value obtenido es más bajo que el corte usual que el $0.05$. El tamaño del efecto nos dio mayor que el nivel de clasificación de $0.14$ por lo cual deducimos que la varianza de la asistencia se encuentra explicada en gran medida por el tipo de ciudad en la que se encuentra. A partir de los resultados obtenidos podemos concluir que existen diferencias significativas entre las medias de las asistencias en las distintas ciudades.
 
 \subsection{Cuarto punto}
 
 \textbf{Consigna:} Si se han obtenido diferencias significativas entre las localidades, determinar cuáles son esas diferencias utilizando el test de Tukey.
 
 
+\begin{table}[H]
+	\centering
+		\begin{tabular}{||l | c | c | c | c ||}
+			\hline
+			\hline
+			Intersecciones & Diff & Lower & Upper & P-Value\\
+			\hline			
+			\hline
+			B-A & -4.7 & -6.5 & -2.8 & 0\\
+			\hline
+			C-A & -5.9 & -7.7 & -4.1 & 0\\
+			\hline
+			C-B & -1.2 & -3.0 & -0.6 & 0.258\\
+			\hline
+			\hline
+		\end{tabular}
+		\caption{Resultados de Tukey.}
+	\label{tab:table-punto-4-3}
+\end{table}
 
-
-
-\cleardoublepage
-
-\begin{thebibliography}{9}
-\addcontentsline{toc}{section}{Bibliography} % This is for the bibliography appears in the index
-
-\bibitem{iot}
-Iván Federico Kwist, Matías Loiseau, David Exequiel Contreras, Federico Gabriel D’Angiolo,  Roberto Osvaldo Mayer. (2019). \textit{Monitorización de un Datacenter mediante Protocolos de IoT}. Congreso Nacional de Ingeniería Informática – Sistemas de Información.
-
-\bibitem{regresion-lineal}
-Federico Gabriel D’Angiolo, Iván Federico Kwist, Matías Loiseau, David Exequiel Contreras, Fernando Asteasuain. (2019). \textit{Algoritmos de Regresión Lineal aplicados al mantenimiento de un Datacenter}. Congreso Argentino de Ciencias de la Computación.
-
-\bibitem{knn}
-Federico Gabriel D’Angiolo, Iván Federico Kwist, Matías Loiseau , David Exequiel Contreras, Gregorio Oscar Glas. (2019). \textit{Algoritmo de KNN aplicado al mantenimiento de un Datacenter}. Congreso Nacional de Ingeniería Informática – Sistemas de Información.
-
-\bibitem{deep-learning-nature}
-LeCun, Y., Bengio, Y., \& Hinton, G. (2015). \textit{Deep learning}. nature, 521(7553), 436-444.
-
-\bibitem{object-detection-review}
-Zhao, Z. Q., Zheng, P., Xu, S. T., \& Wu, X. (2019). \textit{Object detection with deep learning: A review}. IEEE transactions on neural networks and learning systems, 30(11), 3212-3232.
-
-\end{thebibliography}
+Podemos concluir que existen diferencias estadísticamente significativas en las medias de las asistencias entre las ciudades A-B y A-C, donde los valores del P-Value son menores a $0.05$.
 
 
 \end{document} % This is the end of the document
