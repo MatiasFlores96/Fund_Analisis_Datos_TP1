@@ -118,6 +118,20 @@ IQRC
 ### Gráfico Boxplot
 
 ```{r}
+
+Masculino <- Dieta %>%
+  filter(Sexo == 'M')
+
+Femenino <- Dieta %>%
+  filter(Sexo == 'F')
+```
+
+```{r}
+summary(Masculino)
+summary(Femenino)
+```
+
+```{r}
 bp <- ggplot(Dieta, aes(x = Sexo, y = Calorías, fill=Sexo, add = TRUE)) +
   geom_boxplot() +
   labs(
@@ -152,6 +166,11 @@ Alta <- Dieta %>%
 ```{r}
 Moderada 
 Alta
+```
+
+```{r}
+summary(Moderada)
+summary(Alta)
 ```
 
 ### Histograma de Cada Categoría
@@ -332,7 +351,7 @@ ggplot(Sociodemograficos, aes(x = `Tasa de natalidad`, y = `Tasa de mortalidad i
   labs(
     title = "Diagrama de Dispersión entre Tasa de Natalidad y Mortalidad Infantil",
     x = "Natalidad",
-    y = "Mortalidad")+
+    y = "Mortalidad Infantil")+
   theme_classic() +
   theme(
     plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
@@ -447,7 +466,7 @@ Clases
 summary(Clases)
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 attach(Clases)
 ```
 
@@ -527,18 +546,19 @@ library("nortest")
 
 qqPlot(x = Asistencia, col = "dodgerblue4", col.lines = "deepskyblue", pch = 16, 
        id = FALSE,
-       main = "hola",
+       main = "QQPlot de Asistencia",
        xlab = "Cuantiles de la distribución Normal estándar",
-       ylab = "Cuantiles del tiempo de supervivencia")
+       ylab = "Cuantiles de la Asistencia")
 
-shapiro.test(Asistencia)
 lillie.test(Asistencia)
 
 ```
 
-Preguntar sobre la normalidad
+```         
+Al realizar el test de Lilliefors, nos dio un p-value menor al nivel de significancia, por lo cual determinamos que el conjunto no sigue una distribución normal.
+```
 
-### Analisis de Homocedasticidad
+### Análisis de Homocedasticidad
 
 ```{r}
 leveneTest(data = Clases,
@@ -547,15 +567,21 @@ leveneTest(data = Clases,
 
 ```
 
+```         
+Nos dio 0.15 por ende no rechazamos la hipótesis nula que supone la igualdad de las varianzas en los grupos.
+```
+
 ### Test de ANOVA
 
 ```{r}
-# ANOVA según veneno
 aov_clase <- aov(formula = Asistencia ~ Localidad,
     data = Clases)
 
-# Resultado del ANOVA
 summary(aov_clase)
+```
+
+```         
+El P-Value obtenido es más bajo que el corte usual de 0.05
 ```
 
 ### Test de Chi
@@ -564,10 +590,18 @@ summary(aov_clase)
 eta_squared(aov_clase)$Eta2
 ```
 
+```         
+El tamaño del efecto nos dio mayor que el nivel de clasificación de 0.14, por lo tanto deducimos que la varianza de la asistencia se encuentra explicada en gran medida por el tipo de ciudad en la que se encuentra.
+```
+
 ## Punto 4
 
 ### Test de Tukey
 
 ```{r}
 TukeyHSD(aov_clase)
+```
+
+```         
+A partir de los resultados obtenidos, podemos concluir que existen diferencias estadísticamente significativas en las medias de las asistencias entre las ciudades A-B y A-C, donde los valores del P-Value son menores a 0.05.
 ```
