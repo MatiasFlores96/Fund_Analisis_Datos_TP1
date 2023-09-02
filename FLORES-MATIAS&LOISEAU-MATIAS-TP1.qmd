@@ -14,6 +14,7 @@ library(GGally)
 library(ggthemes)
 library(effectsize)
 library(car)
+library("nortest")
 
 ```
 
@@ -51,12 +52,16 @@ which(is.na(Dieta))
 
 ### Eliminación de Nulos
 
+Como no queremos tener los nulos en nuestro dataframe, los eliminamos y reemplazamos el dataframe con el nuevo sin ellos.
+
 ```{r, message=FALSE, warning=FALSE}
 Dieta <- drop_na(Dieta)
 attach(Dieta)
 ```
 
 ## Punto 2
+
+Además del análisis de las medidas descriptivas de la variable Grasas, decidimos realizar también los cálculos sobre las otras variables.
 
 ### Media
 
@@ -110,13 +115,7 @@ IQRC
 
 ## Punto 3
 
-```{r}
-ggplot(Dieta, aes(x = Sexo, y = Calorías, fill = Sexo)) +
-  geom_boxplot() +
-  xlab("Sexo") +
-  theme(legend.position = "none") 
-
-```
+### Gráfico Boxplot
 
 ```{r}
 bp <- ggplot(Dieta, aes(x = Sexo, y = Calorías, fill=Sexo, add = TRUE)) +
@@ -139,7 +138,7 @@ bp + scale_fill_manual(values=c("deepskyblue3", "deepskyblue4"))
 
 ## Punto 4
 
-Dividimos en dos data frames
+Dividimos en dos data frames para poder analizar cada categoría en detalle.
 
 ```{r}
 
@@ -157,6 +156,8 @@ Alta
 
 ### Histograma de Cada Categoría
 
+Realizamos los cálculos de los bins para poder graficar un histograma con mayor precisión. Para esto, implementamos 3 métodos distintos, y probaremos los 3 para ambos gráficos.
+
 ```{r}
 nSturges <- nclass.Sturges(Moderada$Alcohol)
 nSturges
@@ -169,17 +170,38 @@ nFD
 ```
 
 ```{r}
-ggplot(Moderada, aes(Alcohol)) +
+ggplot(Moderada, aes(Alcohol)) + 
   geom_histogram(bins=nSturges, color = "black", fill = "deepskyblue3") +
-  ylab("Frecuencia")
+  labs(
+    title = "Histograma de Alcohol según Categoría Moderada",
+    x = "Alcohol",
+    y = "Frecuencia") +   
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+    panel.grid.major = element_line(color = "#6C7B8B",linewidth = 0.1,linetype = 8))
 
 ggplot(Moderada, aes(Alcohol)) +
   geom_histogram(bins=nScott, color = "black", fill = "deepskyblue3") +
-  ylab("Frecuencia")
+  labs(
+    title = "Histograma de Alcohol según Categoría Moderada",
+    x = "Alcohol",
+    y = "Frecuencia") +   
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+    panel.grid.major = element_line(color = "#6C7B8B",linewidth = 0.1,linetype = 8))
 
 ggplot(Moderada, aes(Alcohol)) +
   geom_histogram(bins=nFD, color = "black", fill = "deepskyblue3") +
-  ylab("Frecuencia")
+  labs(
+    title = "Histograma de Alcohol según Categoría Moderada",
+    x = "Alcohol",
+    y = "Frecuencia") +   
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+    panel.grid.major = element_line(color = "#6C7B8B",linewidth = 0.1,linetype = 8))
 ```
 
 ```{r}
@@ -197,15 +219,36 @@ nFDAlta
 
 ggplot(Alta, aes(Alcohol)) +
   geom_histogram(bins = nSturgesAlta, color = "black", fill = "deepskyblue4") +
-  ylab("Frecuencia")
+  labs(
+    title = "Histograma de Alcohol según Categoría Alta",
+    x = "Alcohol",
+    y = "Frecuencia") +   
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+    panel.grid.major = element_line(color = "#6C7B8B",linewidth = 0.1,linetype = 8))
 
 ggplot(Alta, aes(Alcohol)) +
   geom_histogram(bins = nScottAlta, color = "black", fill = "deepskyblue4") +
-  ylab("Frecuencia")
+  labs(
+    title = "Histograma de Alcohol según Categoría Alta",
+    x = "Alcohol",
+    y = "Frecuencia") +   
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+    panel.grid.major = element_line(color = "#6C7B8B",linewidth = 0.1,linetype = 8))
 
 ggplot(Alta, aes(Alcohol)) +
   geom_histogram(bins = nFDAlta, color = "black", fill = "deepskyblue4") +
-  ylab("Frecuencia")
+  labs(
+    title = "Histograma de Alcohol según Categoría Alta",
+    x = "Alcohol",
+    y = "Frecuencia") +   
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+    panel.grid.major = element_line(color = "#6C7B8B",linewidth = 0.1,linetype = 8))
 ```
 
 ```{r}
@@ -213,7 +256,7 @@ Dieta <- Dieta %>%
   mutate(Categoría = ifelse(Calorías <= 1700 , "Moderada", "Alta")) 
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 Dieta
 attach(Dieta)
 ```
@@ -221,18 +264,10 @@ attach(Dieta)
 ### Boxplot de Consumo de Alcohol
 
 ```{r}
-ggplot(Dieta, aes(x = Categoría, y = Alcohol, fill = Categoría)) +
-  geom_boxplot() +
-  xlab("Categoría") +
-  theme(legend.position = "none") 
-
-```
-
-```{r}
 bp <- ggplot(Dieta, aes(x = Categoría, y = Alcohol, fill=Categoría, add = TRUE)) +
   geom_boxplot() +
   labs(
-    title = "Consumo de Calorías en Función del Sexo",
+    title = "Consumo de Alcohol en base a Categoría",
     x = "Categoría",
     y = "Alcohol"
   ) +
@@ -289,19 +324,25 @@ Sociodemograficos$País[which.max(Sociodemograficos$`Tasa de natalidad`)]
 
 ### Diagrama de Dispersión de los Países
 
+Realizamos un gráfico de dispersión para comparar las variables de tasa de natalidad con la de tasa de mortalidad.
+
 ```{r}
-ggplot(Sociodemograficos, aes(x = `Tasa de natalidad`, y = `Tasa de mortalidad`)) +
+ggplot(Sociodemograficos, aes(x = `Tasa de natalidad`, y = `Tasa de mortalidad infantil`)) +
   geom_point(col = "deepskyblue4", size=1.5) +
   labs(
-    title = "Diagrama de Dispersión entre Tasa de Natalidad y Mortalidad",
+    title = "Diagrama de Dispersión entre Tasa de Natalidad y Mortalidad Infantil",
     x = "Natalidad",
     y = "Mortalidad")+
   theme_classic() +
   theme(
-    plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+    plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
     panel.grid.major = element_line(color = "#6C7B8B",
                                     linewidth = 0.1,
                                     linetype = 8))
+```
+
+```{r}
+cor.test(`Tasa de natalidad`,`Tasa de mortalidad infantil`)
 ```
 
 ## Punto 4
@@ -317,10 +358,16 @@ summary(Sociodemograficos)
 ### Matrices de Covarianzas y Correlaciones
 
 ```{r}
-ggpairs(data = Sociodemograficos, columns = 2:9,
+cov(Sociodemograficos[2:9])
+```
+
+```{r}
+gg=ggpairs(data = Sociodemograficos, columns = 2:9,
         diag = list(continuous = wrap("densityDiag", fill = "dodgerblue2", color="black")),
-        upper = list(continuous = wrap("cor", size = 2.5)),
+        upper = list(continuous = wrap("cor", color = "dodgerblue2")),
         lower = list(continuous = wrap("points" , fill = "black",color = "dodgerblue2")))
+
+print(gg, progress = F)  # no progress bar
 
 ```
 
@@ -328,7 +375,7 @@ ggpairs(data = Sociodemograficos, columns = 2:9,
 
 ## Punto 1
 
-### Analisis del Data Set
+### Análisis del Data Set
 
 ```{r}
 data("swiss")
@@ -338,9 +385,16 @@ data("swiss")
 help(swiss)
 ```
 
-## Punto 2 (?)
+## Punto 2
 
-Verificar las covariancias. Con una covarianza grande no conviene hacer euclides, por eso despues hacemos mahalanobis. En el de mahalanobis hay que hacerlo con todos las provincias, no elegir dos.
+```{r}
+gg=ggpairs(data = swiss,
+        diag = list(continuous = wrap("densityDiag", fill = "dodgerblue2", color="black")),
+        upper = list(continuous = wrap("cor", color = "dodgerblue2")),
+        lower = list(continuous = wrap("points" , fill = "black",color = "dodgerblue2")))
+
+print(gg, progress = F) 
+```
 
 ## Punto 3
 
@@ -387,7 +441,7 @@ Clases
 
 ## Punto 2
 
-### Analisis del Data Frame
+### Análisis del Data Frame
 
 ```{r}
 summary(Clases)
@@ -407,6 +461,7 @@ CiudadB <- Clases %>%
 
 CiudadC <- Clases %>%
   filter(Localidad == "C")
+
 ```
 
 ```{r}
@@ -427,14 +482,29 @@ summary(CiudadB)
 
 ```{r}
 summary(CiudadC)
+```
 
+```{r}
+sd(CiudadA$Asistencia)
+```
+
+```{r}
+sd(CiudadB$Asistencia)
+```
+
+```{r}
+sd(CiudadC$Asistencia)
+```
+
+```{r}
+sd(Clases$Asistencia)
 ```
 
 ```{r}
 bp <- ggplot(Clases, aes(x = Localidad, y = Asistencia, fill=Localidad, add = TRUE)) +
   geom_boxplot() +
   labs(
-    title = "Asistencia según la Localidad",
+    title = "Asistencia según Localidad",
     x = "Localidad",
     y = "Asistencia"
   ) +
@@ -453,6 +523,7 @@ bp + scale_fill_manual(values=c("deepskyblue2","deepskyblue3","deepskyblue4"))
 ### Análisis de Normalidad
 
 ```{r}
+library("nortest")
 
 qqPlot(x = Asistencia, col = "dodgerblue4", col.lines = "deepskyblue", pch = 16, 
        id = FALSE,
@@ -467,7 +538,7 @@ lillie.test(Asistencia)
 
 Preguntar sobre la normalidad
 
-### Analisis de Homoelasticidad
+### Analisis de Homocedasticidad
 
 ```{r}
 leveneTest(data = Clases,
